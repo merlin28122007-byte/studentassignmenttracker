@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>View Assignments</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="app">
+    <div class="sidebar">
+        <p style="color:#36B9F0; font-weight:bold;">📚 Assignment Tracker</p>
+        <hr style="border-color:#007BA7;">
+        <a href="dashboard.html">🏠 Dashboard</a>
+        <a href="addassignment.html">➕ Add Assignment</a>
+        <a href="viewassignments.html" class="active">📖 View Assignments</a>
+        <a href="login.html">🚪 Logout</a>
+    </div>
+
+    <div class="main">
+        <h2>My Assignments</h2>
+
+        <div style="margin-bottom:15px;">
+            <input type="text" id="search" placeholder="Search by title..." style="width:300px;" onkeyup="showData()">
+            <select id="filter" style="width:150px; margin-left:10px;" onchange="showData()">
+                <option value="all">All</option>
+                <option value="completed">Completed</option>
+                <option value="pending">Pending</option>
+            </select>
+        </div>
+
+        <div id="listArea"></div>
+    </div>
+</div>
+
+<script>
+    function showData(){
+        let data = localStorage.getItem("assignments");
+        let list = [];
+        if(data != null){
+            list = JSON.parse(data);
+        }
+
+        let searchText = document.getElementById("search").value.toLowerCase();
+        let filter = document.getElementById("filter").value;
+        let area = document.getElementById("listArea");
+        area.innerHTML = "";
+
+        if(list.length == 0){
+            area.innerHTML = "<div class='card-box'>No assignments yet</div>";
+            return;
+        }
+
+        for(let i=0; i<list.length; i++){
+            let a = list[i];
+
+            // search check
+            if(searchText != "" && a.title.toLowerCase().indexOf(searchText) == -1){
+                continue;
+            }
+
+            // filter check
+            if(filter == "completed" && a.completed == false) continue;
+            if(filter == "pending" && a.completed == true) continue;
+
+            let status = a.completed ? "✅ Completed" : "⏳ Pending";
+            
+            let div = document.createElement("div");
+            div.className = "card-box";
+            div.innerHTML = `
+                <p><b>${a.title}</b> - ${a.subject} <span style="float:right; color:${a.completed ? '#36B9F0' : '#FF4FA3'}">${status}</span></p>
+                <p style="font-size:13px; color:#aaa;">${a.desc}</p>
+                <p style="font-size:12px;">Due: ${a.date}</p>
+                <button onclick="markDone(${i})" style="width:120px;">Mark Done</button>
+                <button onclick="deleteOne(${i})" style="width:120px; background:#FF4FA3; margin-left:10px;">Delete</button>
+            `;
+            area.appendChild(div);
+        }
+    }
+
+    function markDone(index){
+        let data = localStorage.getItem("assignments");
+        let list = JSON.parse(data);
+        list[index].completed = true;
+        localStorage.setItem("assignments", JSON.stringify(list));
+        showData();
+    }
+
+    function deleteOne(index){
+        if(confirm("Delete this?")){
+            let data = localStorage.getItem("assignments");
+            let list = JSON.parse(data);
+            list.splice(index, 1);
+            localStorage.setItem("assignments", JSON.stringify(list));
+            showData();
+        }
+    }
+
+    // show on load
+    showData();
+</script>
+
+</body>
+</html>

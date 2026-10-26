@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Create Account</title>
+<style>
+body{background:#0B090D;font-family:Arial;color:white;display:flex;justify-content:center;align-items:center;height:100vh;}
+.box{background:#132235;padding:30px;border-radius:10px;width:350px;border:1px solid #00c6ff;}
+input{width:100%;padding:10px;margin:8px 0;border-radius:5px;border:1px solid #00c6ff;background:#0B090D;color:white;}
+button{width:100%;padding:12px;background:#00bcd4;border:none;border-radius:5px;color:white;font-weight:bold;cursor:pointer;margin-top:10px;}
+a{color:#ff6ec7;text-decoration:none;font-size:13px;}
+</style>
+</head>
+<body>
+<div class="box">
+<h2 style="text-align:center;">Create Account</h2>
+<form id="regForm"novalidate>
+<label>Full Name</label>
+<input type="text" id="name" required>
+<label>Student ID</label>
+<input type="text" id="studentId" required>
+<label>Email</label>
+<input type="email" id="email" required>
+<label>Password</label>
+<input type="password" id="password" required>
+<label>Confirm Password</label>
+<input type="password" id="cpassword" required>
+<button type="submit">Create Account</button>
+<p style="text-align:center;"><a href="login.html">Already have account? Login</a></p>
+</form>
+</div>
+
+<script>
+document.getElementById("regForm").addEventListener("submit", async function(e){
+  e.preventDefault();
+  let n = document.getElementById("name").value;
+  let s = document.getElementById("studentId").value;
+  let em = document.getElementById("email").value;
+  let p = document.getElementById("password").value;
+  let cp = document.getElementById("cpassword").value;
+
+  if(p != cp){ alert("Passwords do not match"); return; }
+
+  try {
+    const res = await fetch('http://localhost:3000/api/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: n, studentId: s, email: em, password: p })
+    });
+    const data = await res.json();
+    if (res.ok) {
+      alert('Registration successful! Now login.');
+      window.location.href = 'login.html';
+    } else {
+      alert(data.message);
+    }
+  } catch (err) {
+    alert('Server error: ' + err.message);
+  }
+});
+</script>
+</body>
+</html>

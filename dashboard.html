@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Dashboard</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="app">
+<div class="sidebar">
+<p style="color:#36B9F0;font-weight:bold;">📚 Assignment Tracker</p>
+<a href="dashboard.html" class="active">🏠 Dashboard</a>
+<a href="addassignment.html">➕ Add Assignment</a>
+<a href="viewassignments.html">📖 View Assignments</a>
+<a href="login.html">🚪 Logout</a>
+</div>
+<div class="main">
+<h2>Welcome, Student! 👋</h2>
+<div style="display:flex;gap:15px;max-width:500px;margin-top:20px;">
+<div class="stat-card"><h2 id="totalCount">0</h2><p>Total</p></div>
+<div class="stat-card"><h2 id="doneCount">0</h2><p>Completed</p></div>
+</div>
+<div class="card-box" style="max-width:500px;margin-top:20px;">
+<button onclick="location.href='addassignment.html'">+ Add Assignment</button>
+</div>
+</div>
+</div>
+<script>
+let data=localStorage.getItem("assignments");
+let list=data?JSON.parse(data):[];
+document.getElementById("totalCount").innerHTML=list.length;
+let c=0;for(let i=0;i<list.length;i++){if(list[i].completed)c++;}
+document.getElementById("doneCount").innerHTML=c;
+</script>
+</body>
+</html>

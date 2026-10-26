@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="app">
+
+    <div class="sidebar">
+        <p style="color:#36B9F0; font-weight:bold;">📚 Assignment Tracker</p>
+        <hr style="border-color:#007BA7;">
+        <a href="dashboard.html" class="active">🏠 Dashboard</a>
+        <a href="addassignment.html">➕ Add Assignment</a>
+        <a href="viewassignments.html">📖 View Assignments</a>
+        <a href="login.html">🚪 Logout</a>
+    </div>
+
+    <div class="main">
+        <h2>Welcome, Student! 👋</h2>
+        <p style="color:#007BA7;">Track your assignments</p>
+
+        <div style="display:flex; gap:15px; max-width:500px; margin-top:20px;">
+            <div class="stat-card">
+                <h2 id="totalCount">0</h2>
+                <p>Total Assignment</p>
+            </div>
+            <div class="stat-card">
+                <h2 id="doneCount">0</h2>
+                <p>Completed</p>
+            </div>
+        </div>
+
+        <div class="card-box" style="max-width:500px; margin-top:20px;">
+            <button onclick="window.location.href='addassignment.html'">+ Add Assignment</button>
+        </div>
+
+        <div class="card-box" style="max-width:500px;">
+            <p>Quick Links</p>
+            <a href="viewassignments.html" style="color:#36B9F0; text-decoration:none;">View Assignments</a><br><br>
+            <a href="login.html" style="color:#FF4FA3; text-decoration:none;">Logout</a>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    // Show counts from localStorage
+    let data = localStorage.getItem("assignments");
+    let list = [];
+
+    if(data != null){
+        list = JSON.parse(data);
+    }
+
+    document.getElementById("totalCount").innerHTML = list.length;
+
+    let completed = 0;
+    for(let i=0; i<list.length; i++){
+        if(list[i].completed == true){
+            completed++;
+        }
+    }
+    document.getElementById("doneCount").innerHTML = completed;
+</script>
+
+</body>
+</html>

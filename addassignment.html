@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Assignment</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="app">
+
+    <div class="sidebar">
+        <p style="color:#36B9F0; font-weight:bold;">📚 Assignment Tracker</p>
+        <hr style="border-color:#007BA7;">
+        <a href="dashboard.html">🏠 Dashboard</a>
+        <a href="addassignment.html" class="active">➕ Add Assignment</a>
+        <a href="viewassignments.html">📖 View Assignments</a>
+        <a href="login.html">🚪 Logout</a>
+    </div>
+
+    <div class="main">
+        <h2>Add New Assignment</h2>
+
+        <div class="card-box" style="max-width:400px;">
+            <form id="myForm">
+
+                <p>Assignment Title</p>
+                <input type="text" id="title" placeholder="Enter title">
+
+                <p>Subject</p>
+                <select id="subject">
+                    <option value="">Select Subject</option>
+                    <option>Maths</option>
+                    <option>Computer</option>
+                    <option>Science</option>
+                    <option>English</option>
+                </select>
+
+                <p>Description</p>
+                <textarea id="desc" placeholder="Enter description"></textarea>
+
+                <p>Due Date</p>
+                <input type="date" id="date">
+
+                <br><br>
+                <button type="submit">Save Assignment</button>
+                
+                <a href="dashboard.html" style="color:#FF4FA3; display:block; text-align:center; margin-top:10px; font-size:13px; text-decoration:none;">Back to Dashboard</a>
+            </form>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    // When form is submitted
+    document.getElementById("myForm").addEventListener("submit", function(e){
+        e.preventDefault();
+
+        let title = document.getElementById("title").value.trim();
+        let subject = document.getElementById("subject").value;
+        let desc = document.getElementById("desc").value.trim();
+        let date = document.getElementById("date").value;
+
+        // simple validation - like college teaches
+        if(title == ""){
+            alert("Please enter title");
+            return;
+        }
+        if(subject == ""){
+            alert("Please select subject");
+            return;
+        }
+        if(date == ""){
+            alert("Please select date");
+            return;
+        }
+
+        // make object
+        let newAssignment = {
+            title: title,
+            subject: subject,
+            desc: desc,
+            date: date,
+            completed: false
+        };
+
+        // get old data from localStorage
+        let oldData = localStorage.getItem("assignments");
+        let assignments = [];
+
+        if(oldData != null){
+            assignments = JSON.parse(oldData); // text to object
+        }
+
+        assignments.push(newAssignment);
+
+        // save again - object to text
+        localStorage.setItem("assignments", JSON.stringify(assignments));
+
+        alert("Assignment Saved!");
+        window.location.href = "viewassignments.html";
+    });
+</script>
+
+</body>
+</html>

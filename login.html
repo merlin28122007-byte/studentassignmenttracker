@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body style="background:#08090D; font-family:Arial;">
+
+    <div style="width:350px; margin:120px auto; background:#12141f; border:1px solid #007BA7; padding:20px;">
+        
+        <h2 style="color:#36B9F0; text-align:center;">Student Assignment Tracker</h2>
+        <p style="text-align:center; color:white;">Login</p>
+
+        <form id="loginForm">
+            <p style="color:white; font-size:14px;">Email</p>
+            <input type="text" id="email" placeholder="Enter email" style="width:100%; padding:8px; background:#08090D; border:1px solid #007BA7; color:white;">
+
+            <p style="color:white; font-size:14px;">Password</p>
+            <input type="password" id="password" placeholder="Enter password" style="width:100%; padding:8px; background:#08090D; border:1px solid #007BA7; color:white;">
+
+            <br><br>
+            <button type="submit" style="width:100%; padding:10px; background:#007BA7; color:white; border:none;">Login</button>
+        </form>
+
+        <a href="registration.html" style="color:#FF4FA3; display:block; text-align:center; margin-top:15px; font-size:13px; text-decoration:none;">No account? Create Account</a>
+    </div>
+<script>
+document.getElementById("loginForm").addEventListener("submit", async function(e){
+  e.preventDefault();
+  let em = document.getElementById("email").value;
+  let p = document.getElementById("password").value;
+
+  if(em == ""){ alert("Enter email"); return; }
+  if(p == ""){ alert("Enter password"); return; }
+
+  try {
+    const res = await fetch('http://localhost:3000/api/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: em, password: p })
+    });
+    const data = await res.json();
+    if (res.ok) {
+      localStorage.setItem("userEmail", data.email);
+      localStorage.setItem("userName", data.name);
+      alert("Login successful!");
+      window.location.href = 'dashboard.html';
+    } else {
+      alert(data.message);
+    }
+  } catch (err) {
+    alert('Server error: ' + err.message);
+  }
+});
+</script>
+
+</body>
+</html>
