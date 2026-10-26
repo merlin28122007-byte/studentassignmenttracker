@@ -2,18 +2,26 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const bcrypt = require('bcryptjs');
+const path = require('path');
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(express.static(__dirname));
 
-mongoose.connect('mongodb://127.0.0.1:27017/assignmentTracker')
+// ✅ FIX 1: HOMEPAGE - THIS REMOVES "Cannot GET /"
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "login.html"));
+});
+
+// ✅ FIX 2: Use online DB if available, else local
+const MONGO_URL = process.env.MONGO_URL || 'mongodb://127.0.0.1:27017/assignmentTracker';
+
+mongoose.connect(MONGO_URL)
 .then(() => console.log('MongoDB Connected - NEW SERVER LOADED'))
 .catch(err => console.log(err));
 
 // FORCE DELETE OLD CACHED MODEL
-
 const userSchema = new mongoose.Schema({
   name: String,
   studentId: String,
@@ -51,4 +59,6 @@ app.post('/api/login', async (req,res) => {
   } catch(e){ res.status(500).json({ message: e.message }); }
 });
 
+// ✅ FIX 3: For Vercel
 app.listen(3000, () => console.log('Server on 3000'));
+module.exports = app;
