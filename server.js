@@ -9,8 +9,20 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static(__dirname));
 
-app.get("/", (req, res) => {
+app.get("/registration.html", (req, res) => {
+  res.sendFile(path.join(__dirname, "registration.html"));
+});
+app.get("/login.html", (req, res) => {
   res.sendFile(path.join(__dirname, "login.html"));
+});
+app.get("/dashboard.html", (req, res) => {
+  res.sendFile(path.join(__dirname, "dashboard.html"));
+});
+app.get("/addassignment.html", (req, res) => {
+  res.sendFile(path.join(__dirname, "addassignment.html"));
+});
+app.get("/viewassignments.html", (req, res) => {
+  res.sendFile(path.join(__dirname, "viewassignments.html"));
 });
 
 // ✅ FIX FOR VERCEL - CACHED CONNECTION
