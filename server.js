@@ -15,7 +15,7 @@ app.get("/", (req, res) => {
 });
 
 // ✅ FIX 2: Use online DB if available, else local
-const MONGO_URL = process.env.MONGO_URL || 'mongodb://127.0.0.1:27017/assignmentTracker';
+const MONGO_URL = process.env.MONGODB_URI || process.env.MONGO_URI || process.env.MONGO_URL || 'mongodb://127.0.0.1:27017/assignmentTracker';
 
 mongoose.connect(MONGO_URL)
 .then(() => console.log('MongoDB Connected - NEW SERVER LOADED'))
@@ -60,5 +60,7 @@ app.post('/api/login', async (req,res) => {
 });
 
 // ✅ FIX 3: For Vercel
-app.listen(3000, () => console.log('Server on 3000'));
+if (process.env.NODE_ENV !== 'production') {
+  app.listen(3000, () => console.log('Server on 3000'));
+}
 module.exports = app;
