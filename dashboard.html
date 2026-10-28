@@ -2,7 +2,25 @@
 <html>
 <head>
 <title>Dashboard</title>
-<link rel="stylesheet" href="style.css">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial}
+body{background:#0f172a;color:white;min-height:100vh}
+.app{display:flex;min-height:100vh}
+.sidebar{width:220px;background:#1e293b;padding:20px;border-right:1px solid #334155}
+.sidebar p{margin-bottom:20px}
+.sidebar a{display:block;padding:10px 12px;color:#94a3b8;text-decoration:none;border-radius:8px;margin-bottom:8px}
+.sidebar a.active,.sidebar a:hover{background:#334155;color:white}
+.main{flex:1;padding:30px}
+.stat-card{background:#1e293b;border:1px solid #334155;padding:20px;border-radius:12px;flex:1;text-align:center}
+.stat-card h2{font-size:32px;color:#36B9F0}
+.stat-card p{color:#94a3b8;margin-top:5px}
+.card-box{background:#1e293b;border:1px solid #334155;padding:20px;border-radius:12px}
+button{background:linear-gradient(90deg,#36B9F0,#2dd4bf);border:none;padding:12px 20px;border-radius:8px;color:black;font-weight:bold;cursor:pointer}
+button:hover{opacity:0.9}
+h2{color:#e2e8f0}
+@media(max-width:700px){.app{flex-direction:column}.sidebar{width:100%}}
+</style>
 </head>
 <body>
 <div class="app">
