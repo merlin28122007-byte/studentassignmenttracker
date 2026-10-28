@@ -9,11 +9,9 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static(__dirname));
 
-// ✅ THIS WAS MISSING - FIX FOR Cannot GET /
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "registration.html"));
 });
-
 app.get("/registration.html", (req, res) => {
   res.sendFile(path.join(__dirname, "registration.html"));
 });
@@ -30,7 +28,6 @@ app.get("/viewassignments.html", (req, res) => {
   res.sendFile(path.join(__dirname, "viewassignments.html"));
 });
 
-// ✅ FIX FOR VERCEL - CACHED CONNECTION
 let cached = global.mongoose;
 if (!cached) {
   cached = global.mongoose = { conn: null, promise: null };
@@ -38,23 +35,25 @@ if (!cached) {
 
 async function connectDB() {
   if (cached.conn) return cached.conn;
-  
   if (!cached.promise) {
     const MONGO_URL = process.env.MONGODB_URI || process.env.MONGO_URI || process.env.MONGO_URL;
-    console.log("MONGO_URL found:", !!MONGO_URL);
     if (!MONGO_URL) throw new Error("No MONGO URL found in env");
-    
     cached.promise = mongoose.connect(MONGO_URL, {
       bufferCommands: false,
-      serverSelectionTimeoutMS: 5000,
-    }).then(m => m);
+      serverSelectionTimeoutMS: 10000,
+    }).then(m => m).catch(e => {
+      cached.promise = null;
+      throw e;
+    });
   }
-  cached.conn = await cached.promise;
-  console.log('MongoDB Connected - CACHED');
-  return cached.conn;
+  try {
+    cached.conn = await cached.promise;
+    return cached.conn;
+  } catch(e) {
+    cached.promise = null;
+    throw e;
+  }
 }
-
-connectDB().catch(e => console.log("DB Error:", e.message));
 
 const userSchema = new mongoose.Schema({
   name: String,
@@ -75,7 +74,6 @@ app.post('/api/register', async (req, res) => {
     await u.save();
     res.json({ message: 'ok' });
   } catch(e) {
-    console.log('REGISTER ERROR:', e.message);
     res.status(500).json({ message: e.message });
   }
 });
@@ -90,7 +88,6 @@ app.post('/api/login', async (req,res) => {
     if(!ok) return res.status(400).json({ message: 'Wrong password' });
     res.json({ message: 'ok', name: user.name, email: user.email });
   } catch(e){ 
-    console.log('LOGIN ERROR:', e.message);
     res.status(500).json({ message: e.message }); 
   }
 });
