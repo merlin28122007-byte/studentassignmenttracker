@@ -9,6 +9,11 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static(__dirname));
 
+// ✅ THIS WAS MISSING - FIX FOR Cannot GET /
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "registration.html"));
+});
+
 app.get("/registration.html", (req, res) => {
   res.sendFile(path.join(__dirname, "registration.html"));
 });
@@ -49,10 +54,8 @@ async function connectDB() {
   return cached.conn;
 }
 
-// Connect immediately
 connectDB().catch(e => console.log("DB Error:", e.message));
 
-// ✅ FIX MODEL CACHING
 const userSchema = new mongoose.Schema({
   name: String,
   studentId: String,
@@ -63,7 +66,7 @@ const User = mongoose.models.User || mongoose.model('User', userSchema);
 
 app.post('/api/register', async (req, res) => {
   try {
-    await connectDB(); // Ensure connected before every request
+    await connectDB();
     const { name, studentId, email, password } = req.body;
     const check = await User.findOne({ email });
     if(check) return res.status(400).json({ message: 'Email exists' });
