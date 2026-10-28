@@ -2,23 +2,37 @@
 <html>
 <head>
     <title>View Assignments</title>
-    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial}
+body{background:#0f172a;color:white;min-height:100vh}
+.app{display:flex;min-height:100vh}
+.sidebar{width:220px;background:#1e293b;padding:20px;border-right:1px solid #334155}
+.sidebar p{margin-bottom:15px}
+.sidebar hr{margin-bottom:15px;border:0;border-top:1px solid #334155}
+.sidebar a{display:block;padding:10px 12px;color:#94a3b8;text-decoration:none;border-radius:8px;margin-bottom:8px}
+.sidebar a.active,.sidebar a:hover{background:#334155;color:white}
+.main{flex:1;padding:30px}
+.card-box{background:#1e293b;border:1px solid #334155;padding:18px;border-radius:12px;margin-bottom:12px;max-width:600px}
+input,select{padding:10px;border-radius:8px;border:1px solid #334155;background:#0f172a;color:white;outline:none}
+button{background:linear-gradient(90deg,#36B9F0,#2dd4bf);border:none;padding:8px 14px;border-radius:8px;color:black;font-weight:bold;cursor:pointer}
+button:hover{opacity:0.9}
+h2{color:#e2e8f0;margin-bottom:15px}
+@media(max-width:700px){.app{flex-direction:column}.sidebar{width:100%} #search{width:100%!important} #filter{width:100%!important;margin-left:0!important;margin-top:10px}}
+</style>
 </head>
 <body>
-
 <div class="app">
     <div class="sidebar">
         <p style="color:#36B9F0; font-weight:bold;">📚 Assignment Tracker</p>
-        <hr style="border-color:#007BA7;">
+        <hr>
         <a href="dashboard.html">🏠 Dashboard</a>
         <a href="addassignment.html">➕ Add Assignment</a>
         <a href="viewassignments.html" class="active">📖 View Assignments</a>
         <a href="login.html">🚪 Logout</a>
     </div>
-
     <div class="main">
         <h2>My Assignments</h2>
-
         <div style="margin-bottom:15px;">
             <input type="text" id="search" placeholder="Search by title..." style="width:300px;" onkeyup="showData()">
             <select id="filter" style="width:150px; margin-left:10px;" onchange="showData()">
@@ -27,56 +41,42 @@
                 <option value="pending">Pending</option>
             </select>
         </div>
-
         <div id="listArea"></div>
     </div>
 </div>
-
 <script>
     function showData(){
         let data = localStorage.getItem("assignments");
         let list = [];
-        if(data != null){
-            list = JSON.parse(data);
-        }
-
+        if(data != null){ list = JSON.parse(data); }
         let searchText = document.getElementById("search").value.toLowerCase();
         let filter = document.getElementById("filter").value;
         let area = document.getElementById("listArea");
         area.innerHTML = "";
-
         if(list.length == 0){
             area.innerHTML = "<div class='card-box'>No assignments yet</div>";
             return;
         }
-
         for(let i=0; i<list.length; i++){
             let a = list[i];
-
-            // search check
-            if(searchText != "" && a.title.toLowerCase().indexOf(searchText) == -1){
-                continue;
-            }
-
-            // filter check
+            if(searchText != "" && a.title.toLowerCase().indexOf(searchText) == -1){ continue; }
             if(filter == "completed" && a.completed == false) continue;
             if(filter == "pending" && a.completed == true) continue;
-
             let status = a.completed ? "✅ Completed" : "⏳ Pending";
-            
             let div = document.createElement("div");
             div.className = "card-box";
             div.innerHTML = `
                 <p><b>${a.title}</b> - ${a.subject} <span style="float:right; color:${a.completed ? '#36B9F0' : '#FF4FA3'}">${status}</span></p>
-                <p style="font-size:13px; color:#aaa;">${a.desc}</p>
+                <p style="font-size:13px; color:#94a3b8; margin:8px 0;">${a.desc}</p>
                 <p style="font-size:12px;">Due: ${a.date}</p>
+                <div style="margin-top:10px">
                 <button onclick="markDone(${i})" style="width:120px;">Mark Done</button>
                 <button onclick="deleteOne(${i})" style="width:120px; background:#FF4FA3; margin-left:10px;">Delete</button>
+                </div>
             `;
             area.appendChild(div);
         }
     }
-
     function markDone(index){
         let data = localStorage.getItem("assignments");
         let list = JSON.parse(data);
@@ -84,7 +84,6 @@
         localStorage.setItem("assignments", JSON.stringify(list));
         showData();
     }
-
     function deleteOne(index){
         if(confirm("Delete this?")){
             let data = localStorage.getItem("assignments");
@@ -94,10 +93,7 @@
             showData();
         }
     }
-
-    // show on load
     showData();
 </script>
-
 </body>
 </html>
