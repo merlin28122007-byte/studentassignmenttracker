@@ -1,12 +1,9 @@
-/* Full page background */
 body{
     margin: 0;
     background-color: #08090D;
     color: white;
     font-family: Arial;
 }
-
-/* For Dashboard pages - side bar layout - Fig.2,3,4 */
 .app{
     display: flex;
 }
@@ -45,7 +42,6 @@ body{
     color: #36B9F0;
 }
 
-/* Small boxes for Total and Completed - Fig.2 */
 .stat-card{
     background-color: #12141f;
     border: 1px solid #007BA7;
@@ -59,7 +55,6 @@ body{
     margin: 0;
 }
 
-/* Normal box - for forms */
 .card-box{
     background-color: #12141f;
     border: 1px solid #007BA7;
@@ -67,7 +62,6 @@ body{
     margin-top: 15px;
 }
 
-/* Input and select */
 input, select, textarea{
     width: 100%;
     padding: 8px;
@@ -81,7 +75,6 @@ textarea{
     height: 60px;
 }
 
-/* Button */
 button{
     width: 100%;
     padding: 10px;
